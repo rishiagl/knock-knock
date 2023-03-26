@@ -1,15 +1,15 @@
 package repositories
 
 import (
+	"database/sql"
 	"sync"
 
 	"github.com/R58235/knock-knock/pkg/datastore"
-	"github.com/jackc/pgx/v5"
 )
 
 var lock = &sync.Mutex{}
 type Repository struct{
-	conn *pgx.Conn
+	db *sql.DB
 }
 
 var repo *Repository
@@ -20,8 +20,8 @@ func GetRepository() *Repository {
         defer lock.Unlock()
 
         if repo == nil {
-			conn := datastore.NewConnection()
-            repo = &Repository{conn}
+			db := datastore.NewConnection()
+            repo = &Repository{db}
 			return repo
         } else {
 			return repo

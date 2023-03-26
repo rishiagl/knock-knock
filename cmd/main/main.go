@@ -1,12 +1,10 @@
 package main
 
 import (
-	"context"
 	"fmt"
 	"log"
-	"os"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/R58235/knock-knock/internal/repositories"
 	"github.com/joho/godotenv"
 )
 
@@ -16,20 +14,7 @@ func main() {
 	if err != nil {
 	  log.Fatal("Error loading .env file")
 	}
-
-	conn, err := pgx.Connect(context.Background(), os.Getenv("DATABASE_URL"))
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
-	}
-	defer conn.Close(context.Background())
-
-	var greeting string
-	err = conn.QueryRow(context.Background(), "select 'Hello, world!'").Scan(&greeting)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "QueryRow failed: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println(greeting)
+	
+	r := repositories.GetRepository()
+	u := r.GetUser(1)
 }
